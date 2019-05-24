@@ -165,21 +165,37 @@ async function getLocations(zip) {
     return datosUser
 }
 
+const newArray = [];
 
-const newArray =[];
-
-for (let i = 0; i < Infos.length; i++) {
-    getUsers(Infos[i].email).then(datos =>{
+function crearUsuarios (numero){
+    newArray.push([])
+    getUsers(Infos[numero].email).then(datos =>{
+        newArray[numero].push({
+            gender:datos.gender,
+            name:datos.name,
+            email:datos.email
+        })
         var email = datos.email
-        console.log(datos)
         return getInfos(email)
-    }).then(inf=>{
-        let zipeCode = inf.zipcode
-        console.log(inf)
-        return getLocations(zipeCode)
-    }).then(local=>{
-      console.log(local)
     })
+    .then(inf=>{
+        newArray[numero].push({
+            zipcode:inf.zipcode,
+            picture:inf.picture
+        })
+        let zipeCode = inf.zipcode
+        return getLocations(zipeCode)
+    })
+    .then(local=>{
+        newArray[numero].push({
+            location:local.location
+        })
+    })
+    
+}
+for (let i = 0; i < Users.length; i++) {
+    
+    crearUsuarios(i)
     
 }
 
