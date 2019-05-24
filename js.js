@@ -149,34 +149,27 @@ const Locations = [
     }
 ]
 
-async function getUsers(dato) {
-    let emailUser = Users.find(user=> user.email === dato)
-    return emailUser
+async function getUsers(email) {
+    let user = Users.find(user=> user.email === email)
+    return user
 }
 async function getInfos(email,obj) {
-    let getZip = Infos.find(datos => datos.email === email)
-    let obj2 ={zipcode:getZip.zipcode,picture:getZip.picture}
-    let obj3 =Object.assign(obj,obj2)
-    return obj3
+    let getZip = Infos.find(datos => datos.email === email) 
+    return  Object.assign(obj,getZip)
 }
 async function getLocations(zip,inf) {
     let datosUser =  Locations.find(datos=> datos.zipcode === zip)
-    let obj = {location:datosUser.location}
-    let obj2 = Object.assign(inf,obj)
-    return obj2
+    return Object.assign(inf,datosUser);
 }
 
-const newArray = [];
+let newArray = [];
 
 function crearUsuarios (numero){
     getUsers(Infos[numero].email).then(datos =>{
-        let obj ={gender:datos.gender,name:datos.name,email:datos.email}
-        var email = datos.email
-        return getInfos(email,obj)
+        return getInfos(datos.email,datos)
     })
     .then(inf=>{
-        let zipeCode = inf.zipcode
-        return getLocations(zipeCode,inf)
+        return getLocations(inf.zipcode,inf)
     })
     .then(local=>{
         newArray.push(local)
