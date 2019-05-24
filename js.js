@@ -164,19 +164,11 @@ async function getLocations(zip,inf) {
 
 let newArray = [];
 
-function crearUsuarios (numero){
-    getUsers(Infos[numero].email).then(datos =>{
-        return getInfos(datos.email,datos)
-    })
-    .then(inf=>{
-        return getLocations(inf.zipcode,inf)
-    })
-    .then(local=>{
-        newArray.push(local)
-    })
-}
 for (let i = 0; i < Users.length; i++) {
-    crearUsuarios(i)
+    getUsers(Infos[i].email).then(datos =>getInfos(datos.email,datos))
+    .then(inf=>getLocations(inf.zipcode,inf))
+    .then(local=> newArray.push(local))
 }
+
 console.log(newArray)
 
