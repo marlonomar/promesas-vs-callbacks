@@ -149,26 +149,31 @@ const Locations = [
     }
 ]
 
-async function getUsers(email) {
-    let user = Users.find(user=> user.email === email)
-    return user
-}
-async function getInfos(email,obj) {
-    let getZip = Infos.find(datos => datos.email === email) 
-    return  Object.assign(obj,getZip)
-}
-async function getLocations(zip,inf) {
-    let datosUser =  Locations.find(datos=> datos.zipcode === zip)
-    return Object.assign(inf,datosUser);
-}
+let dataBase = [];
 
-let newArray = [];
+async function getUsers(email) {
+    let userEmail = Users.find(search=> search.email === email)
+    return userEmail
+}
+async function getInfos(dataUser) {
+    let getZipCode = Infos.find(search => search.email === dataUser.email) 
+    return  Object.assign(dataUser,getZipCode)
+}
+async function getLocations(dataInfos) {
+    let dataUser =  Locations.find(search=> search.zipcode === dataInfos.zipcode)
+    return Object.assign(dataInfos,dataUser);
+}
 
 for (let i = 0; i < Users.length; i++) {
-    getUsers(Infos[i].email).then(datos =>getInfos(datos.email,datos))
-    .then(inf=>getLocations(inf.zipcode,inf))
-    .then(local=> newArray.push(local))
+    getUsers(Infos[i].email)
+    .then(sendEmail =>getInfos(sendEmail))
+    .then(sendInfo=>getLocations(sendInfo))
+    .then(sendData=> dataBase.push(sendData))
+    .catch(err=>{
+        console.log(err)
+    })
 }
 
-console.log(newArray)
+console.log(dataBase)
+
 
